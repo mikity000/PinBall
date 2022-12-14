@@ -8,6 +8,7 @@ public class BallController : MonoBehaviour
 {
     //ボールが見える可能性のあるz軸の最小値
     private float visiblePosZ = -6.5f;
+    private Rigidbody rb;
 
     //ゲームオーバを表示するテキスト
     private Text gameoverText;
@@ -18,6 +19,7 @@ public class BallController : MonoBehaviour
     {
         //シーン中のGameOverTextオブジェクトを取得
         gameoverText = GameObject.Find("GameOverText").GetComponent<Text>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -43,22 +45,34 @@ public class BallController : MonoBehaviour
         {
             score += 10;
             scoreText.text = score.ToString();
+            BounceBallAway(gameObject, c.gameObject);
         }
         else if (c.gameObject.CompareTag("LargeStar"))
         {
             score += 20;
             scoreText.text = score.ToString();
+            BounceBallAway(gameObject, c.gameObject);
         }
         else if (c.gameObject.CompareTag("SmallCloud"))
         {
             score += 30;
             scoreText.text = score.ToString();
-
+            BounceBallAway(gameObject, c.gameObject);
         }
         else if (c.gameObject.CompareTag("LargeCloud"))
         {
             score += 40;
             scoreText.text = score.ToString();
+            BounceBallAway(gameObject, c.gameObject);
         }
+    }
+
+    //ボールを弾き飛ばす
+    private void BounceBallAway(GameObject ball, GameObject obj)
+    {
+        Vector3 ballPos = ball.transform.position + Vector3.one;
+        Vector3 objPos = obj.transform.position;
+        Vector3 dir = Vector3.Normalize(ballPos - objPos);
+        rb.AddForce(dir, ForceMode.Impulse);
     }
 }
